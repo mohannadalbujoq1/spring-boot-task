@@ -35,7 +35,7 @@ public class ActorService {
     }
 
 
-public void addNewActor(UUID actorId, Actor actor) {
+public void addNewActor(UUID actorId, Actor actor) {git add .
     UUID newActorId = Optional.ofNullable(actorId).orElse(UUID.randomUUID());
 
     if (!emailValidator.test(actor.getEmail())) {

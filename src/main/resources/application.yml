@@ -1,0 +1,23 @@
+server:
+  port: 8081
+
+app:
+  datasource:
+    jdbc-url: jdbc:postgresql://localhost:5432/films
+    username: postgres
+    password: password
+    pool-size: 30
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/films
+    username: postgres
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  flyway:
+    url: jdbc:postgresql://localhost:5432/films
+    user: postgres
+    password: password

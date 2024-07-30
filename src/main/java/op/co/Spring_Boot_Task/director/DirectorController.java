@@ -1,12 +1,21 @@
 package op.co.Spring_Boot_Task.director;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import op.co.Spring_Boot_Task.film.Film;
 
 @RestController
 @RequestMapping("/api/director")
@@ -25,10 +34,12 @@ public class DirectorController {
     }
 
     @GetMapping(path = "{directorId}")
-    public Director getDirectorById(@PathVariable("directorId") UUID directorId) {
+    public Director getDirectorById(@PathVariable UUID directorId) {
         return directorService.getDirectorById(directorId)
                 .orElse(null);
     }
+    
+  
 
     @PostMapping
     public void addNewDirector(@RequestBody Director director) {
@@ -36,14 +47,12 @@ public class DirectorController {
     }
 
     @PutMapping(path = "{directorId}")
-    public void updateDirector(@PathVariable("directorId") UUID directorId, @RequestBody Director director) {
+    public void updateDirector(@PathVariable UUID directorId, @RequestBody Director director) {
         directorService.updateDirector(directorId, director);
     }
 
     @DeleteMapping(path = "{directorId}")
-    public void deleteDirector(@PathVariable("directorId") UUID directorId) {
+    public void deleteDirector(@PathVariable UUID directorId) {
         directorService.deleteDirector(directorId);
     }
-
- 
 }

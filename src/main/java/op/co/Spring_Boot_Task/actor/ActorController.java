@@ -33,19 +33,19 @@ public class ActorController {
     }
 
     @GetMapping(path = "{actorId}")
-    public Actor getActorById(@PathVariable("actorId") UUID actorId) {
+    public Actor getActorById(@PathVariable UUID actorId) {
         return actorService.getActorById(actorId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Actor not found"));
     }
     
     @GetMapping(path = "films/{actorId}")
-public List<ActorFilm> getAllFilmsForActor(@PathVariable("actorId") UUID actorId) {
-    List<ActorFilm> films = actorService.selectAllActorFilms(actorId);
-    if (films.isEmpty()) {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Actor not found or no films associated");
+    public List<ActorFilmDTO> getAllFilmsForActor(@PathVariable UUID actorId) {
+        List<ActorFilmDTO> films = actorService.selectAllActorFilms(actorId);
+        if (films.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Actor not found or no films associated");
+        }
+        return films;
     }
-    return films;
-}
 
     @PostMapping
     public void addNewActor(@RequestBody @Valid Actor actor) {
@@ -53,22 +53,22 @@ public List<ActorFilm> getAllFilmsForActor(@PathVariable("actorId") UUID actorId
     }
 
     @PostMapping(path = "{filmId}/actors/{actorId}")
-public void addActorToFilm(@PathVariable("filmId") UUID filmId, @PathVariable("actorId") UUID actorId) {
+public void addActorToFilm(@PathVariable UUID filmId, @PathVariable UUID actorId) {
     actorService.addActorToFilm(filmId, actorId);
 }
 
     @PutMapping(path = "{actorId}")
-    public void updateActor(@PathVariable("actorId") UUID actorId, @RequestBody @Valid Actor actor) {
+    public void updateActor(@PathVariable UUID actorId, @RequestBody @Valid Actor actor) {
         actorService.updateActor(actorId, actor);
     }
 
     @DeleteMapping(path = "{actorId}")
-    public void deleteActor(@PathVariable("actorId") UUID actorId) {
+    public void deleteActor(@PathVariable UUID actorId) {
         actorService.deleteActor(actorId);
     }
 
 @DeleteMapping(path = "{filmId}/actors/{actorId}")
-public void deleteActorFromFilm(@PathVariable("filmId") UUID filmId, @PathVariable("actorId") UUID actorId) {
+public void deleteActorFromFilm(@PathVariable UUID filmId, @PathVariable UUID actorId) {
     int updateCount = actorService.deleteActorFromFilm(filmId, actorId);
     if (updateCount == 0) {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Actor or Film not found");

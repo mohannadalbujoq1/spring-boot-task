@@ -1,10 +1,12 @@
 package op.co.Spring_Boot_Task.director;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import op.co.Spring_Boot_Task.film.Film;
-import op.co.Spring_Boot_Task.film.FilmDataAccessService;
+import op.co.Spring_Boot_Task.film.FilmRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,48 +16,49 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import java.time.LocalDate;
 @Service
 public class DirectorService {
-    private final DirectorDataAccessService directorDataAccessService;
-    private final FilmDataAccessService filmDataAccessService;
+    private final DirectorRepository directorRepository;
+    private final FilmRepository filmRepository;
+
 
     @Autowired
-    public DirectorService(DirectorDataAccessService directorDataAccessService, FilmDataAccessService filmDataAccessService) {
-        this.directorDataAccessService = directorDataAccessService;
-        this.filmDataAccessService = filmDataAccessService;
+    public DirectorService(DirectorRepository directorRepository, FilmRepository filmRepository) {
+        this.directorRepository = directorRepository;
+        this.filmRepository = filmRepository;
     }
+
+
     public List<Director> getAllDirectors() {
-        return directorDataAccessService.selectAllDirectors();
+        return directorRepository.findAll();
     }
 
     public Optional<Director> getDirectorById(UUID directorId) {
-        return directorDataAccessService.selectDirectorById(directorId);
+        return directorRepository.findById(directorId);
     }
 
-    public int addNewDirector(Director director) {
-        UUID newDirectorId = UUID.randomUUID();
-        return directorDataAccessService.insertDirector(newDirectorId, director);
+    public Director addNewDirector(Director director) {
+        director.setDirectorId(UUID.randomUUID()); 
+        return directorRepository.save(director);
     }
 
-    public int updateDirector(UUID directorId, Director director) {
-        return directorDataAccessService.updateDirectorById(directorId, director);
+    public Director updateDirector(UUID directorId, Director directorDetails) {
+        return directorRepository.findById(directorId).map(director -> {
+            director.setFirstName(directorDetails.getFirstName());
+            director.setLastName(directorDetails.getLastName());
+            director.setEmail(directorDetails.getEmail());
+            director.setDob(directorDetails.getDob());
+            director.setGender(directorDetails.getGender());
+            return directorRepository.save(director);
+        }).orElseGet(() -> {
+            directorDetails.setDirectorId(directorId);
+            return directorRepository.save(directorDetails);
+        });
     }
 
-    public int deleteDirector(UUID directorId) {
-        return directorDataAccessService.deleteDirectorById(directorId);
+    public void deleteDirector(UUID directorId) {
+        directorRepository.deleteById(directorId);
     }
 
-
-
-    
-    private Map<String, Object> convertFilmToMap(Film film) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("filmId", ((Film) film).getFilmId());
-        map.put("title", ((Film) film).getTitle());
-        map.put("releaseDate", ((Film) film).getReleaseDate());
-        map.put("genre", ((Film) film).getGenre());
-        map.put("duration", ((Film) film).getDuration());
-        map.put("directorId", ((Film) film).getDirectorId());
-        return map;
-    }
 }

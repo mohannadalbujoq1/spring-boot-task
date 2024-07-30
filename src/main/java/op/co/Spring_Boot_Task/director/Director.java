@@ -1,24 +1,44 @@
 package op.co.Spring_Boot_Task.director;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Id;
+
+import java.time.LocalDate;
 import java.util.UUID;
+
+import javax.persistence.Column;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+@Entity
+@Table(name = "director")
 public class Director {
-    private final UUID directorId;
+    @Id
+    @Column(name = "director_id")
+    private UUID directorId;
     @NotBlank
-    private final String firstName;
+    @Column(name = "first_name")
+    private String firstName;
     @NotBlank
-    private final String lastName;
+    @Column(name = "last_name")
+    private String lastName;
     @Email
-    private final String email;
+    @Column(name = "email")
+    private String email;
     @NotNull
-    private final LocalDate dob;
+    @Column(name = "dob")
+    private LocalDate dob;
     @NotNull
-    private final Gender gender;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender")
+    private Gender gender;
+
+    public Director() {}
 
     public Director(
     @JsonProperty("directorId") UUID directorId,
@@ -72,9 +92,31 @@ public class Director {
                 '}';
     }
 
-    enum Gender {
+    public enum Gender {
         MALE, FEMALE
     }
+    public void setDirectorId(UUID directorId) {
+        this.directorId = directorId;
+    }
+    
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+    
+    public void setGender(Gender female) {
+        this.gender = female;
+    }
+    
+    public void setDob(LocalDate dob) {
+        this.dob = dob;
+    }
+  
 }
-
-
